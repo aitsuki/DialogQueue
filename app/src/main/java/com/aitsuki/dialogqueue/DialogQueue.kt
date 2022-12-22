@@ -20,9 +20,9 @@ class DialogQueue(lifecycleOwner: LifecycleOwner) {
         var activeDialog: Dialog? = null
         lifecycleOwner.lifecycleScope.launchWhenResumed {
             for (Unit in queue) {
-                activeDialog = null
                 val task = pq.peek() ?: continue
                 val nextFunc = fun() {
+                    activeDialog = null
                     pq.remove(task)
                     next.trySend(Unit)
                 }
