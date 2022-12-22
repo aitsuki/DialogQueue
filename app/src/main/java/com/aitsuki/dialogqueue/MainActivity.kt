@@ -13,13 +13,13 @@ class MainActivity : AppCompatActivity() {
         super.onCreate(savedInstanceState)
         setContentView(R.layout.activity_main)
         findViewById<Button>(R.id.hello_btn).setOnClickListener {
-            showDialogsReverseOrder(10)
+            showDialogs(10)
         }
-        showDialogsReverseOrder(3)
+        showDialogs(3)
     }
 
     // 反向显示
-    private fun showDialogsReverseOrder(n: Int) {
+    private fun showDialogs(n: Int) {
         for (i in 1..n) {
             queue.offer("$i", n - i) { next ->
                 MaterialAlertDialogBuilder(this)
