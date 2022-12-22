@@ -29,10 +29,10 @@ class DialogQueue(lifecycleOwner: LifecycleOwner) {
                 try {
                     activeDialog = task.dialogBuilder(nextFunc)
                     activeDialog?.show()
+                    next.receive()
                 } catch (e: Throwable) {
                     e.printStackTrace()
                 }
-                next.receive()
             }
         }
 

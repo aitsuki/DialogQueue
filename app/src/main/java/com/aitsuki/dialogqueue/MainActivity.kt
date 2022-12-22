@@ -23,8 +23,7 @@ class MainActivity : AppCompatActivity() {
 
     private fun showDialogs(n: Int) {
         for (i in 1..n) {
-            //                  反向显示
-            queue.offer("$i", n - i) { next ->
+            queue.offer("$i", i) { next ->
                 MaterialAlertDialogBuilder(this)
                     .setMessage("Hello $i")
                     .setPositiveButton("ok", null)
