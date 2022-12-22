@@ -34,7 +34,7 @@ class SampleActivity : AppcompatActivity {
         showDialogs()
     }
 
-    // 无需担心dialog窗体泄漏，因为DialogQueue监听了声明周期
+    // 无需担心dialog窗体泄漏，因为DialogQueue监听了生命周期
 //    override fun onDestroy() {
 //        super.onDestroy()
 //    }
