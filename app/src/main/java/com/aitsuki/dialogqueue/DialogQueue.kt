@@ -26,8 +26,12 @@ class DialogQueue(lifecycleOwner: LifecycleOwner) {
                     pq.remove(task)
                     next.trySend(Unit)
                 }
-                activeDialog = task.dialogBuilder(nextFunc)
-                activeDialog?.show()
+                try {
+                    activeDialog = task.dialogBuilder(nextFunc)
+                    activeDialog?.show()
+                } catch (e: Throwable) {
+                    e.printStackTrace()
+                }
                 next.receive()
             }
         }
@@ -35,6 +39,7 @@ class DialogQueue(lifecycleOwner: LifecycleOwner) {
         lifecycleOwner.lifecycle.addObserver(object : DefaultLifecycleObserver {
             override fun onDestroy(owner: LifecycleOwner) {
                 activeDialog?.dismiss()
+                activeDialog = null
             }
         })
     }
