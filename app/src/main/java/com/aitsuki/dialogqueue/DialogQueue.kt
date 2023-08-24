@@ -2,47 +2,41 @@ package com.aitsuki.dialogqueue
 
 import android.app.Dialog
 import androidx.lifecycle.DefaultLifecycleObserver
+import androidx.lifecycle.Lifecycle
 import androidx.lifecycle.LifecycleOwner
-import androidx.lifecycle.lifecycleScope
-import kotlinx.coroutines.channels.BufferOverflow
-import kotlinx.coroutines.channels.Channel
-import java.util.*
+import java.util.PriorityQueue
 
-class DialogQueue(lifecycleOwner: LifecycleOwner) {
+class DialogQueue(private val lifecycleOwner: LifecycleOwner) {
 
-    private val queue = Channel<Unit>(Channel.UNLIMITED)
-    private val next = Channel<Unit>(onBufferOverflow = BufferOverflow.DROP_OLDEST)
-    // priority
+    private var activeDialog: Dialog? = null
+
     private val pq = PriorityQueue<Task>(11, Comparator { o1, o2 ->
         return@Comparator o1.priority - o2.priority
     })
 
     init {
-        var activeDialog: Dialog? = null
-        lifecycleOwner.lifecycleScope.launchWhenResumed {
-            for (Unit in queue) {
-                val task = pq.peek() ?: continue
-                val nextFunc = fun() {
-                    activeDialog = null
-                    pq.remove(task)
-                    next.trySend(Unit)
-                }
-                try {
-                    activeDialog = task.dialogBuilder(nextFunc)
-                    activeDialog?.show()
-                    next.receive()
-                } catch (e: Throwable) {
-                    e.printStackTrace()
-                }
-            }
-        }
-
         lifecycleOwner.lifecycle.addObserver(object : DefaultLifecycleObserver {
+            override fun onResume(owner: LifecycleOwner) {
+                tryPop()
+            }
+
             override fun onDestroy(owner: LifecycleOwner) {
                 activeDialog?.dismiss()
                 activeDialog = null
             }
         })
+    }
+
+    private fun tryPop() {
+        if (activeDialog == null && lifecycleOwner.lifecycle.currentState.isAtLeast(Lifecycle.State.RESUMED)) {
+            val task = pq.poll() ?: return
+            val nextFunc = fun() {
+                activeDialog = null
+                tryPop()
+            }
+            activeDialog = task.dialogBuilder(nextFunc)
+            activeDialog?.show()
+        }
     }
 
     fun offer(tag: String, priority: Int, dialogBuilder: (next: () -> Unit) -> Dialog) {
@@ -51,7 +45,7 @@ class DialogQueue(lifecycleOwner: LifecycleOwner) {
             return
         }
         pq.offer(task)
-        queue.trySend(Unit)
+        tryPop()
     }
 
     private class Task(
