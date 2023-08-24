@@ -17,7 +17,7 @@ class DialogQueue(private val lifecycleOwner: LifecycleOwner) {
     init {
         lifecycleOwner.lifecycle.addObserver(object : DefaultLifecycleObserver {
             override fun onResume(owner: LifecycleOwner) {
-                tryPop()
+                tryPoll()
             }
 
             override fun onDestroy(owner: LifecycleOwner) {
@@ -27,12 +27,12 @@ class DialogQueue(private val lifecycleOwner: LifecycleOwner) {
         })
     }
 
-    private fun tryPop() {
+    private fun tryPoll() {
         if (activeDialog == null && lifecycleOwner.lifecycle.currentState.isAtLeast(Lifecycle.State.RESUMED)) {
             val task = pq.poll() ?: return
             val nextFunc = fun() {
                 activeDialog = null
-                tryPop()
+                tryPoll()
             }
             activeDialog = task.dialogBuilder(nextFunc)
             activeDialog?.show()
@@ -45,7 +45,7 @@ class DialogQueue(private val lifecycleOwner: LifecycleOwner) {
             return
         }
         pq.offer(task)
-        tryPop()
+        tryPoll()
     }
 
     private class Task(
