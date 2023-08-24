@@ -12,8 +12,9 @@ class DialogQueue(lifecycleOwner: LifecycleOwner) {
 
     private val queue = Channel<Unit>(Channel.UNLIMITED)
     private val next = Channel<Unit>(onBufferOverflow = BufferOverflow.DROP_OLDEST)
+    // priority
     private val pq = PriorityQueue<Task>(11, Comparator { o1, o2 ->
-        return@Comparator o2.priority - o1.priority
+        return@Comparator o1.priority - o2.priority
     })
 
     init {

@@ -1,0 +1,16 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <string name="app_name">DialogQueue</string>
+    <string name="actual_order">实际顺序: %s</string>
+    <string name="expect_order">期望顺序: %s</string>
+    <string name="dialog_message">这个Dialog的优先级是 %d.</string>
+    <string name="show">Show</string>
+    <string name="note">说明: 列表顺序表示Dialog的添加顺序，优先级表示期望的Dialog显示顺序。</string>
+    <string name="tag">唯一标签</string>
+    <string name="priority">优先级</string>
+    <string name="please_enter">请输入</string>
+    <string name="cancel">取消</string>
+    <string name="confirm">确定</string>
+    <string name="get_it">知道了</string>
+    <string name="add_new_dialog">添加Dialog</string>
+</resources>

@@ -1,3 +1,15 @@
 <resources>
     <string name="app_name">DialogQueue</string>
+    <string name="actual_order">Actual Order: %s</string>
+    <string name="expect_order">Except Order: %s</string>
+    <string name="dialog_message">The priority of this dialog is %d.</string>
+    <string name="show">Show</string>
+    <string name="note">Note: The list order represents the sequence of adding Dialogs, and the priority indicates the desired sequence of Dialog display.</string>
+    <string name="tag">Unique Tag</string>
+    <string name="priority">Priority</string>
+    <string name="please_enter">Please enter</string>
+    <string name="cancel">Cancel</string>
+    <string name="confirm">Confirm</string>
+    <string name="get_it">Get it</string>
+    <string name="add_new_dialog">Add New Dialog</string>
 </resources>
